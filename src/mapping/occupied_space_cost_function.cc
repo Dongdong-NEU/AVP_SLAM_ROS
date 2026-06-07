@@ -1,3 +1,25 @@
+/**
+ * @file occupied_space_cost_function.cc
+ * @brief 占据空间代价函数 - Ceres扫描匹配的核心残差定义
+ *
+ * 这是 CeresScanMatcher2D 中最重要的残差项。
+ *
+ * 原理：
+ *   对于点云中的每个点，按当前优化的位姿 (x,y,θ) 变换到世界坐标系，
+ *   然后在栅格地图中查询该位置的空闲代价 (correspondence cost)。
+ *
+ *   如果点落在占据区域 → 空闲代价小 → 残差小 → 好
+ *   如果点落在空闲区域 → 空闲代价大 → 残差大 → 差
+ *
+ *   Ceres优化器会调整 (x,y,θ) 使总残差最小，即让点云尽量落在占据区域。
+ *
+ * 技术要点：
+ *   - 使用 Ceres::BiCubicInterpolator 对栅格值做双三次插值
+ *     → 使代价函数连续可微，Ceres可以用自动微分计算梯度
+ *   - GridArrayAdapter 在地图边界外填充最大空闲代价 (kPadding)
+ *   - 残差维度 = 点云大小（动态残差），每个点产生一个残差值
+ */
+
 #include "occupied_space_cost_function.h"
 
 namespace AVP
@@ -6,9 +28,6 @@ namespace AVP
 namespace mapping
 {
     
-// Computes a cost for matching the 'point_cloud' to the 'grid' with
-// a 'pose'. The cost increases with poorer correspondence of the grid and the
-// point observation (e.g. points falling into less occupied space).
 class OccupiedSpaceCostFunction2D {
  public:
   OccupiedSpaceCostFunction2D(const double scaling_factor,

@@ -1,6 +1,14 @@
 <launch>
-    
-    <node pkg="avp" type="mapping_node" name="mapping" output="screen"/>
+
+    <!-- 建图/回环/优化日志与地图保存参数（mapping 节点私有命名空间） -->
+    <node pkg="avp" type="mapping_node" name="mapping" output="screen">
+        <param name="log_dir" value="$(find avp)/output/logs"/>
+        <param name="log_file" value="mapping_slam.log"/>
+        <param name="enable_file_log" value="true"/>
+        <param name="map_save_path" value="$(find avp)/output/semantic_map_final.pcd"/>
+        <param name="save_map_on_shutdown" value="true"/>
+        <param name="save_map_each_optimization" value="true"/>
+    </node>
     <node pkg="rosbag" type="play" name="bag_play" args="$(find avp)/data/path.bag"/>
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find avp)/launch/mapping.rviz " required="true"/>
 

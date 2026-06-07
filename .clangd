@@ -1,0 +1,6 @@
+CompileFlags:
+  Add:
+    - -std=c++14
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None

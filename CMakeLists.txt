@@ -3,7 +3,9 @@ project(avp)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
-set(CMAKE_BUILD_TYPE Release)
+# set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # add_definitions("-Wall -g")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -160,6 +162,7 @@ include_directories(
 #            )
 #add_executable(keyBoardCtl_node src/keyBoardCtl_node.cc)
 add_executable(mapping_node src/mapping_node_main.cc
+            src/mapping/slam_file_logger.cc
             src/mapping/local_trajectory_builder.cc
             src/mapping/pose_extrapolator.cc
             src/mapping/transform.cc
@@ -183,6 +186,7 @@ add_executable(mapping_node src/mapping_node_main.cc
 )
 
 add_executable(fast_CSM_test_node src/fast_CSM_test.cc
+            src/mapping/slam_file_logger.cc
             src/mapping/local_trajectory_builder.cc
             src/mapping/pose_extrapolator.cc
             src/mapping/transform.cc
