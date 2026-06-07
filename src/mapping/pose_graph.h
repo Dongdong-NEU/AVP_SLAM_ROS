@@ -14,6 +14,7 @@
 #include <nav_msgs/Path.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include "io.h"
+#include "slam_file_logger.h"
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <string>
@@ -73,7 +74,10 @@ class PoseGraph
 
     std::map<unsigned int, TrajectoryNode> getSubmapList();
 
-
+    size_t GetConstraintCount() const;
+    size_t GetGlobalConstraintCount() const;
+    size_t GetNodeCount() const;
+    size_t GetSubmapCount() const;
 
     PoseGraphData data_;
     private:
