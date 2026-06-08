@@ -5,19 +5,46 @@ namespace AVP
 namespace mapping
 {
     
-    GlobalTrajectoryBuilder::GlobalTrajectoryBuilder(PoseGraph* const pose_graph, std::shared_ptr<LocalTrajectoryBuilder> local_trajectory_builder)
-    :pose_graph_{pose_graph}, local_trajectory_builder_{local_trajectory_builder}
+    // GlobalTrajectoryBuilder 构造函数
+    // pose_graph: 指向全局位姿图优化器的指针
+    // local_trajectory_builder: 局部轨迹构建器的共享指针
+    GlobalTrajectoryBuilder::GlobalTrajectoryBuilder(
+        PoseGraph* const pose_graph,
+        std::shared_ptr<LocalTrajectoryBuilder> local_trajectory_builder
+    )
+        // 初始化成员变量，采用成员初始化列表
+        : pose_graph_{pose_graph},
+        local_trajectory_builder_{local_trajectory_builder}
     {
-        odometry_sub_ = node_handle_.subscribe("odometry_noised",0,&GlobalTrajectoryBuilder::odometry_callback,this);
-        semantic_scan_sub_ = node_handle_.subscribe("scan_semantic_points",0,&GlobalTrajectoryBuilder::semantic_callback,this);
-        semantic_map_pub_ = node_handle_.advertise<sensor_msgs::PointCloud2>("semantic_map",0);
-        markers_pub_ = node_handle_.advertise<visualization_msgs::MarkerArray>("markers",0);
+        // 1. 订阅加噪声后的里程计消息
+        // 话题名为"odometry_noised"，队列长度0，回调函数为odometry_callback，回调对象为当前类实例
+        odometry_sub_ = node_handle_.subscribe(
+            "odometry_noised", 0, &GlobalTrajectoryBuilder::odometry_callback, this);
 
-        timers_.push_back(node_handle_.createTimer(
-            ros::Duration(5), &GlobalTrajectoryBuilder::PubSemanticMap,this));
+        // 2. 订阅语义点云扫描消息
+        // 话题名为"scan_semantic_points"，队列长度0，回调函数为semantic_callback
+        semantic_scan_sub_ = node_handle_.subscribe(
+            "scan_semantic_points", 0, &GlobalTrajectoryBuilder::semantic_callback, this);
 
+        // 3. 创建一个语义地图的发布者
+        // 用于发布全局语义点云地图（sensor_msgs::PointCloud2），话题名为"semantic_map"
+        semantic_map_pub_ = node_handle_.advertise<sensor_msgs::PointCloud2>(
+            "semantic_map", 0);
+
+        // 4. 创建一个MarkerArray的发布者
+        // 用于发布可视化marker（如轨迹点、回环等），话题名为"markers"
+        markers_pub_ = node_handle_.advertise<visualization_msgs::MarkerArray>(
+            "markers", 0);
+
+        // 5. 创建一个定时器，周期为5秒
+        // 每5秒调用一次PubSemanticMap函数，定时发布语义地图
+        timers_.push_back(
+            node_handle_.createTimer(
+                ros::Duration(5),
+                &GlobalTrajectoryBuilder::PubSemanticMap,
+                this)
+        );
     }
-
     void GlobalTrajectoryBuilder::AddSensorData(const Eigen::Vector3d& odometery_pose)
     {
         local_trajectory_builder_->AddOdometryData(odometery_pose);

@@ -1,7 +1,20 @@
 <launch>
+    <!-- AVP SLAM 建图启动文件 -->
+    <!-- 此文件用于启动AVP SLAM系统的建图功能，包括建图节点、数据回放和可视化 -->
     
+    <!-- 启动建图节点 -->
+    <!-- pkg: 包名为avp，type: 可执行文件为mapping_node，name: 节点名称为mapping -->
+    <!-- output="screen": 将节点的输出显示到终端屏幕上，便于调试 -->
     <node pkg="avp" type="mapping_node" name="mapping" output="screen"/>
+    
+    <!-- 播放录制的数据包 -->
+    <!-- 使用rosbag play命令播放预录制的传感器数据 -->
+    <!-- $(find avp)/data/path.bag: 自动查找avp包下的data目录中的path.bag文件 -->
     <node pkg="rosbag" type="play" name="bag_play" args="$(find avp)/data/path.bag"/>
+    
+    <!-- 启动RViz可视化工具 -->
+    <!-- 加载预配置的RViz配置文件以显示建图过程和结果 -->
+    <!-- -d 参数指定配置文件路径，required="true"表示此节点是必需的，如果失败会终止整个launch -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find avp)/launch/mapping.rviz " required="true"/>
 
 </launch>

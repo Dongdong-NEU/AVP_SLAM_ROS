@@ -5,18 +5,25 @@ namespace AVP
     
 namespace mapping
 {
-    
+// GridMap 构造函数
+// 参数：
+//   limits —— 保存地图空间信息（分辨率、原点、栅格数等），决定地图的物理范围和细致程度
+//   conversion_tables —— 指向外部的查表工具，后续可将栅格中的存储值和实际的“代价/概率/置信度”等物理量互相转换
 GridMap::GridMap(const MapLimits& limits, ValueConversionTables* conversion_tables)
-    : limits_(limits), conversion_tables_(conversion_tables),
-    correspondence_cost_cells_(
+    : limits_(limits),                            // 1. 初始化地图限制参数（如分辨率、尺寸、原点等）
+      conversion_tables_(conversion_tables),      // 2. 保存转换表指针
+      // 地图实际的栅格数组，按照总栅格数分配空间，并全部初始化为“未知值”（常量 kUnknownCorrespondenceValue）。
+      correspondence_cost_cells_(
           limits_.cell_limits().num_x_cells * limits_.cell_limits().num_y_cells,
           kUnknownCorrespondenceValue)
 {
+    // 利用转换工具，预先生成一个查找表，后续任何数值映射都可以直接查表实现，极大提升运行效率
     value_to_correspondence_cost_table_ = conversion_tables->GetConversionTable(
-          max_correspondence_cost_, min_correspondence_cost_,
-          max_correspondence_cost_);
+          max_correspondence_cost_,   // 最大代价
+          min_correspondence_cost_,   // 最小代价
+          max_correspondence_cost_    // 步长或查表方式（一般和最大值一致）
+    );
 }
-
 void GridMap::GrowLimits(const Eigen::Vector2f& point) { // 输入的是boundingbox
   GrowLimits(point, {mutable_correspondence_cost_cells()}, // 使用{}初始化vector
              {kUnknownCorrespondenceValue});

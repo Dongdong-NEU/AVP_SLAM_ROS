@@ -222,7 +222,7 @@ bool FastCorrelativeScanMatcher2D::MatchWithSearchParameters(
     const std::vector<pcl::PointCloud<pcl::PointXYZ>> rotated_scans = // 按照不同角度旋转后的点云
         GenerateRotatedScans(rotated_point_cloud, search_parameters);
 
-    ROS_INFO("rotated_scans size: %d", rotated_scans.size());
+    ROS_INFO("rotated_scans size: %zu", rotated_scans.size());
 
     const std::vector<DiscreteScan2D> discrete_scans = DiscretizeScans( // 计算旋转后的点云，经初始位姿变换后在栅格地图中的索引
         limits_, rotated_scans,
@@ -234,7 +234,7 @@ bool FastCorrelativeScanMatcher2D::MatchWithSearchParameters(
     const std::vector<Candidate2D> lowest_resolution_candidates =
         ComputeLowestResolutionCandidates(discrete_scans, search_parameters);
     
-    ROS_INFO("lowest_resolution_candidates size: %d", lowest_resolution_candidates.size());
+    ROS_INFO("lowest_resolution_candidates size: %zu", lowest_resolution_candidates.size());
     // for (size_t i = 0; i < lowest_resolution_candidates.size(); i++)
     // {
     //     if (lowest_resolution_candidates[i].score > 0.1)

@@ -1,0 +1,27 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja generator",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CXX_STANDARD": "14"
+            },
+            "environment": {
+                "ROS_PACKAGE_PATH": "/home/xihuidong/Documents/catkin_ws/src:/opt/ros/noetic/share",
+                "CMAKE_PREFIX_PATH": "/home/xihuidong/Documents/catkin_ws/devel:/opt/ros/noetic"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        }
+    ]
+}

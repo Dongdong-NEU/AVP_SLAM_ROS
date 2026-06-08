@@ -19,20 +19,21 @@
 
 
 int main(int argc, char **argv)
-{
+{   // 初始化ROS节点，节点名称为"mapping_node"
     ros::init(argc, argv, "mapping_node");
     
     ros::start();
-
+    // 创建局部轨迹构建器，用于处理局部传感器数据和轨迹估计
     std::shared_ptr<AVP::mapping::LocalTrajectoryBuilder> local_trajectory_builder(
         new AVP::mapping::LocalTrajectoryBuilder
     );
- 
+    // 创建全局轨迹构建器，负责全局地图优化和轨迹管理
+    // 需要传入一个PoseGraph对象和局部轨迹构建器
     AVP::mapping::GlobalTrajectoryBuilder global_trajectory_builder2D(
         new AVP::mapping::PoseGraph, local_trajectory_builder);
-    
+    // 进入ROS事件循环，等待并处理回调
     ros::spin();
     
-
+    // 程序正常退出
     return 0;
 }

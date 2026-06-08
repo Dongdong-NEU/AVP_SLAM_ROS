@@ -1,0 +1,4 @@
+<launch>
+    <!-- 仅启动建图节点 -->
+    <node pkg="avp" type="mapping_node" name="mapping" output="screen"/>
+</launch>

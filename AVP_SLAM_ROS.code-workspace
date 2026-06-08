@@ -1,0 +1,36 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "C_Cpp.default.includePath": [
+            "${workspaceFolder}/**",
+            "/opt/ros/noetic/include/**",
+            "/home/xihuidong/Documents/catkin_ws/devel/include/**",
+            "/usr/include/eigen3",
+            "/usr/include/pcl-1.10/**",
+            "/usr/include/opencv4/**"
+        ],
+        "C_Cpp.default.defines": [
+            "ROS_BUILD_SHARED_LIBS=1",
+            "ROSCONSOLE_BACKEND_LOG4CXX",
+            "ROS_PACKAGE_NAME=\"avp\""
+        ],
+        "C_Cpp.default.cppStandard": "gnu++14",
+        "C_Cpp.default.compilerPath": "/usr/bin/g++",
+        "files.associations": {
+            "*.launch": "xml",
+            "*.urdf": "xml",
+            "*.xacro": "xml"
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.cpptools",
+            "ms-vscode.cpptools-extension-pack",
+            "ms-vscode.cmake-tools"
+        ]
+    }
+}

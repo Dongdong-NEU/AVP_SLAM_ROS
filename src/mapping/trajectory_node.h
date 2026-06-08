@@ -14,6 +14,11 @@ struct TrajectoryNode
 {
     struct Data
     {
+        Data() = default;
+        Data(const pcl::PointCloud<pcl::PointXYZ>& semantic_data,
+             const Eigen::Vector3d& pose)
+            : filtered_semantic_data(semantic_data), local_pose(pose) {}
+
         pcl::PointCloud<pcl::PointXYZ> filtered_semantic_data;
         Eigen::Vector3d local_pose;
     };
